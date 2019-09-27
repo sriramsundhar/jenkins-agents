@@ -1,0 +1,24 @@
+import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
+// assuming an agent is configured as alpinei
+node('alpine') {
+  checkout scm
+  def jenkinsUtils = load "./jenkins/Utils.groovy"
+  def config = jenkinsUtils.getConfig()
+  config.initialCommitHash = jenkinsUtils.getCommitHash()
+  stage('Build') {
+   sh(script: './gradlew clean build')
+  }
+  stage('Release') {
+    if(jenkinsUtils.isReleasable(config)) {
+      git(
+              url: scm.getUserRemoteConfigs()[0].getUrl(),
+              branch: config.TRUNK_NAME,
+              credentialsId: config.SSH_KEY_ID
+      )
+      // Release lifecycle
+      sh './gradlew release -Prelease.useAutomaticVersion=true'
+    } else {
+      Utils.markStageSkippedForConditional("$STAGE_NAME")
+    }
+  }
+}

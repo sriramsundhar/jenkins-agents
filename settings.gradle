@@ -1,0 +1,4 @@
+rootProject.name = 'jenkins-agents'
+include 'java8-alpine'
+include 'node8-agent'
+
