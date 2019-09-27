@@ -7,12 +7,12 @@ plugins {
     id("com.palantir.docker") version "0.22.1"
 }
 
-//release {
-//    failOnSnapshotDependencies = true
-//    with (propertyMissing("git") as GitAdapter.GitConfig) {
-//        requireBranch = "master"
-//    }
-//}
+release {
+    failOnSnapshotDependencies = true
+    with (propertyMissing("git") as GitAdapter.GitConfig) {
+        requireBranch = "master"
+    }
+}
 
 task("build") {}
 
